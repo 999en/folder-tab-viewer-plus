@@ -25,4 +25,7 @@ export interface Settings {
   use24HourFormat: boolean;
   showDate: boolean;
   showBookmarks: boolean;
+  welcomeMessage: string | null;
+  selectedWallpaper: string;
+  customWallpaperUrl: string;
 }

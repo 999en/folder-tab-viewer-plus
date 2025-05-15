@@ -8,15 +8,62 @@ import SearchBar from "@/components/SearchBar";
 
 const Index = () => {
   const { settings } = useApp();
+  
+  const getWallpaperStyle = () => {
+    if (settings.selectedWallpaper === "default") {
+      return {};
+    }
+    
+    if (settings.selectedWallpaper === "custom" && settings.customWallpaperUrl) {
+      return {
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url(${settings.customWallpaperUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      };
+    }
+    
+    // Get wallpaper from predefined list
+    const wallpaperUrls = {
+      mountains: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      ocean: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21",
+      forest: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
+      city: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a",
+      architecture: "https://images.unsplash.com/photo-1487958449943-2429e8be8625",
+      coding: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+      tech: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
+    };
+    
+    const url = wallpaperUrls[settings.selectedWallpaper as keyof typeof wallpaperUrls];
+    if (url) {
+      return {
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url(${url})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      };
+    }
+    
+    return {};
+  };
+  
+  const wallpaperStyle = getWallpaperStyle();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted p-8">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-background to-muted p-8"
+      style={wallpaperStyle}
+    >
       <Settings />
       <div className="max-w-5xl mx-auto pt-16">
-        {settings.name && (
-          <h2 className="text-xl font-medium text-center mb-4 animate-fade-in">
-            Welcome, {settings.name}
-          </h2>
+        {(settings.name || settings.welcomeMessage) && (
+          <div className="text-center mb-4 animate-fade-in">
+            {settings.welcomeMessage ? (
+              <h2 className="text-xl font-medium">{settings.welcomeMessage}</h2>
+            ) : settings.name ? (
+              <h2 className="text-xl font-medium">Welcome, {settings.name}</h2>
+            ) : null}
+          </div>
         )}
         <Clock />
         <SearchBar />

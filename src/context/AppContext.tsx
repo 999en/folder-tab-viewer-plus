@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Settings, Bookmark, BookmarkFolder } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
@@ -23,6 +22,9 @@ const defaultSettings: Settings = {
   use24HourFormat: false,
   showDate: true,
   showBookmarks: true,
+  welcomeMessage: null,
+  selectedWallpaper: "default",
+  customWallpaperUrl: "",
 };
 
 // The browser extension API would be used in a real extension
