@@ -1,55 +1,60 @@
 
-import { useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { file } from "lucide-react";
+import { File } from "lucide-react";
 
 const PdfViewer = () => {
   const { currentViewingPdf, closeCurrentPdf } = useApp();
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
+  const [pdfName, setPdfName] = useState("");
+  
   useEffect(() => {
-    // For a real extension, we'd use a PDF.js or similar library
-    // to render PDFs from local files
-    if (currentViewingPdf && iframeRef.current) {
-      // Here we assume currentViewingPdf is a valid URL or data URI
-      // In a real extension with local file access, we'd need special handling
+    if (currentViewingPdf) {
+      // Extract the file name from the path
+      const parts = currentViewingPdf.split(/[\/\\]/);
+      setPdfName(parts[parts.length - 1]);
     }
   }, [currentViewingPdf]);
-
+  
   if (!currentViewingPdf) return null;
-
+  
   return (
-    <div className="fixed inset-0 bg-background z-50 flex flex-col">
-      <div className="p-4 border-b flex justify-between items-center">
-        <div className="flex items-center">
-          <file className="h-5 w-5 mr-2" />
-          <h2 className="text-lg font-medium">
-            {currentViewingPdf.split('/').pop()}
-          </h2>
-        </div>
-        <Button onClick={closeCurrentPdf} variant="outline">
-          Close
-        </Button>
-      </div>
-      <div className="flex-1 p-4">
-        {/* 
-          In a real extension, we'd use PDF.js or a similar library to render PDFs.
-          For this demo, we'll show a message explaining the limitations.
-        */}
-        <div className="bg-muted p-6 rounded-lg text-center h-full flex flex-col items-center justify-center">
-          <file className="h-16 w-16 mb-4 text-muted-foreground" />
-          <h3 className="text-xl font-medium mb-2">PDF Preview</h3>
-          <p className="text-muted-foreground max-w-md">
-            In a real browser extension, this area would render the PDF file using PDF.js or 
-            a similar library. Browser extensions with the appropriate permissions can access 
-            local files and render them securely.
-          </p>
-          <p className="mt-4 text-sm">
-            File path: <code className="bg-background p-1 rounded">{currentViewingPdf}</code>
-          </p>
-        </div>
-      </div>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card className="w-full max-w-6xl max-h-[90vh] flex flex-col">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-base font-medium flex items-center">
+            <File className="mr-2 h-4 w-4" />
+            {pdfName || "PDF Viewer"}
+          </CardTitle>
+          <Button variant="outline" size="sm" onClick={closeCurrentPdf}>
+            Close
+          </Button>
+        </CardHeader>
+        <CardContent className="flex-1 p-0 relative min-h-[70vh]">
+          {currentViewingPdf.startsWith('http') ? (
+            <iframe 
+              src={currentViewingPdf} 
+              className="w-full h-full min-h-[70vh]" 
+              title="PDF Viewer"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full p-8">
+              <div className="text-center">
+                <File className="mx-auto h-12 w-12 text-muted-foreground" />
+                <p className="mt-4 text-lg font-medium">Local PDF Viewer</p>
+                <p className="mt-2 text-sm text-muted-foreground max-w-md">
+                  In a real extension, this would display the local PDF file.
+                  For this demo, we're just showing this placeholder.
+                </p>
+                <p className="mt-4 text-xs text-muted-foreground border border-dashed p-2 rounded">
+                  {currentViewingPdf}
+                </p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

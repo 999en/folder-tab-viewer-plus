@@ -7,6 +7,7 @@ export interface Bookmark {
   localPath?: string;
   dateAdded: Date;
   folderId?: string;
+  favicon?: string;
 }
 
 export interface BookmarkFolder {

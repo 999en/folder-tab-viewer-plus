@@ -8,13 +8,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookmarkFolder, Bookmark } from "@/types";
-import { file, folder, folderInput, plus } from "lucide-react";
+import { File, Folder, FolderInput, Plus } from "lucide-react";
 
 const Bookmarks = () => {
   const { bookmarkFolders, addBookmark, addBookmarkFolder, removeBookmark, removeFolder, importLocalFolder, viewPdf } = useApp();
   const [newFolderName, setNewFolderName] = useState("");
   const [newBookmarkTitle, setNewBookmarkTitle] = useState("");
   const [newBookmarkUrl, setNewBookmarkUrl] = useState("");
+  const [newBookmarkFavicon, setNewBookmarkFavicon] = useState("");
   const [importFolderName, setImportFolderName] = useState("");
   const [importFolderPath, setImportFolderPath] = useState("");
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
@@ -41,6 +42,18 @@ const Bookmarks = () => {
     if (!newBookmarkTitle || !newBookmarkUrl || !selectedFolderId) return;
 
     const isPdf = newBookmarkUrl.toLowerCase().endsWith('.pdf');
+    let favicon = newBookmarkFavicon;
+    
+    // If no custom favicon is provided, try to generate one from the domain
+    if (!favicon && !isPdf) {
+      try {
+        const url = new URL(newBookmarkUrl);
+        favicon = `${url.protocol}//${url.hostname}/favicon.ico`;
+      } catch (e) {
+        // If URL parsing fails, leave favicon empty
+        console.error("Invalid URL format");
+      }
+    }
 
     const newBookmark: Bookmark = {
       id: `bookmark-${Date.now()}`,
@@ -49,11 +62,13 @@ const Bookmarks = () => {
       isPdf,
       dateAdded: new Date(),
       folderId: selectedFolderId,
+      favicon: favicon || undefined
     };
 
     addBookmark(newBookmark);
     setNewBookmarkTitle("");
     setNewBookmarkUrl("");
+    setNewBookmarkFavicon("");
     setIsAddBookmarkOpen(false);
   };
 
@@ -74,7 +89,7 @@ const Bookmarks = () => {
           <Dialog open={isAddFolderOpen} onOpenChange={setIsAddFolderOpen}>
             <DialogTrigger asChild>
               <Button size="sm" variant="outline">
-                <folder className="mr-2 h-4 w-4" />
+                <Folder className="mr-2 h-4 w-4" />
                 New Folder
               </Button>
             </DialogTrigger>
@@ -107,7 +122,7 @@ const Bookmarks = () => {
           <Dialog open={isImportFolderOpen} onOpenChange={setIsImportFolderOpen}>
             <DialogTrigger asChild>
               <Button size="sm" variant="outline">
-                <folderInput className="mr-2 h-4 w-4" />
+                <FolderInput className="mr-2 h-4 w-4" />
                 Import Folder
               </Button>
             </DialogTrigger>
@@ -167,9 +182,9 @@ const Bookmarks = () => {
             {bookmarkFolders.map((folder) => (
               <TabsTrigger key={folder.id} value={folder.id}>
                 {folder.isLocalFolder ? (
-                  <folderInput className="mr-2 h-4 w-4" />
+                  <FolderInput className="mr-2 h-4 w-4" />
                 ) : (
-                  <folder className="mr-2 h-4 w-4" />
+                  <Folder className="mr-2 h-4 w-4" />
                 )}
                 {folder.name}
               </TabsTrigger>
@@ -193,7 +208,7 @@ const Bookmarks = () => {
                       }}>
                         <DialogTrigger asChild>
                           <Button size="sm" variant="ghost">
-                            <plus className="h-4 w-4" />
+                            <Plus className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -226,6 +241,18 @@ const Bookmarks = () => {
                                 className="col-span-3"
                               />
                             </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="bookmarkFavicon" className="text-right">
+                                Favicon URL
+                              </Label>
+                              <Input
+                                id="bookmarkFavicon"
+                                value={newBookmarkFavicon}
+                                onChange={(e) => setNewBookmarkFavicon(e.target.value)}
+                                className="col-span-3"
+                                placeholder="https://example.com/favicon.ico (optional)"
+                              />
+                            </div>
                           </div>
                           <DialogFooter>
                             <Button onClick={handleAddBookmark}>Add Bookmark</Button>
@@ -233,7 +260,7 @@ const Bookmarks = () => {
                         </DialogContent>
                       </Dialog>
                       <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => removeFolder(folder.id)}>
-                        <file className="h-4 w-4" />
+                        <File className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -248,14 +275,30 @@ const Bookmarks = () => {
                       folder.bookmarks.map((bookmark) => (
                         <Card key={bookmark.id} className="overflow-hidden">
                           <div className="p-4 flex justify-between items-center">
-                            <div>
-                              <h3 className="font-medium truncate" title={bookmark.title}>
-                                {bookmark.isPdf && <file className="inline-block mr-1 h-4 w-4" />}
-                                {bookmark.title}
-                              </h3>
-                              <p className="text-xs text-muted-foreground truncate">
-                                {bookmark.url}
-                              </p>
+                            <div className="flex items-center">
+                              {bookmark.favicon ? (
+                                <img 
+                                  src={bookmark.favicon} 
+                                  alt="" 
+                                  className="w-4 h-4 mr-2"
+                                  onError={(e) => {
+                                    // If favicon fails to load, replace with default icon
+                                    e.currentTarget.style.display = 'none';
+                                    e.currentTarget.nextSibling.style.display = 'inline-block';
+                                  }}
+                                />
+                              ) : null}
+                              {bookmark.isPdf ? (
+                                <File className="inline-block mr-2 h-4 w-4" style={{display: bookmark.favicon ? 'none' : 'inline-block'}} />
+                              ) : null}
+                              <div>
+                                <h3 className="font-medium truncate" title={bookmark.title}>
+                                  {bookmark.title}
+                                </h3>
+                                <p className="text-xs text-muted-foreground truncate">
+                                  {bookmark.url}
+                                </p>
+                              </div>
                             </div>
                             <div className="flex space-x-1">
                               {bookmark.isPdf ? (
