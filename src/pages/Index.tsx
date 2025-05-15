@@ -4,6 +4,7 @@ import Clock from "@/components/Clock";
 import Bookmarks from "@/components/Bookmarks";
 import Settings from "@/components/Settings";
 import PdfViewer from "@/components/PdfViewer";
+import SearchBar from "@/components/SearchBar";
 
 const Index = () => {
   const { settings } = useApp();
@@ -18,6 +19,7 @@ const Index = () => {
           </h2>
         )}
         <Clock />
+        <SearchBar />
         {settings.showBookmarks && <Bookmarks />}
         <PdfViewer />
       </div>
