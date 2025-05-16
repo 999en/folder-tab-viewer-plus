@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookmarkFolder, Bookmark } from "@/types";
-import { File, Folder, FolderInput, Plus } from "lucide-react";
+import { File, Folder, FolderInput, Plus, Upload } from "lucide-react";
 
 const Bookmarks = () => {
   const { bookmarkFolders, addBookmark, addBookmarkFolder, removeBookmark, removeFolder, importLocalFolder, viewPdf } = useApp();
@@ -88,12 +88,12 @@ const Bookmarks = () => {
         <div className="flex space-x-2">
           <Dialog open={isAddFolderOpen} onOpenChange={setIsAddFolderOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="outline" className="glass-dark hover:bg-white/10">
                 <Folder className="mr-2 h-4 w-4" />
                 New Folder
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="glass-card border-white/10">
               <DialogHeader>
                 <DialogTitle>Create new folder</DialogTitle>
                 <DialogDescription>
@@ -109,24 +109,24 @@ const Bookmarks = () => {
                     id="folderName"
                     value={newFolderName}
                     onChange={(e) => setNewFolderName(e.target.value)}
-                    className="col-span-3"
+                    className="col-span-3 glass-input"
                   />
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={handleCreateFolder}>Create Folder</Button>
+                <Button onClick={handleCreateFolder} className="glass hover:bg-white/20">Create Folder</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
 
           <Dialog open={isImportFolderOpen} onOpenChange={setIsImportFolderOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="outline" className="glass-dark hover:bg-white/10">
                 <FolderInput className="mr-2 h-4 w-4" />
                 Import Folder
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="glass-card border-white/10">
               <DialogHeader>
                 <DialogTitle>Import local folder</DialogTitle>
                 <DialogDescription>
@@ -142,7 +142,7 @@ const Bookmarks = () => {
                     id="importName"
                     value={importFolderName}
                     onChange={(e) => setImportFolderName(e.target.value)}
-                    className="col-span-3"
+                    className="col-span-3 glass-input"
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -153,7 +153,7 @@ const Bookmarks = () => {
                     id="importPath"
                     value={importFolderPath}
                     onChange={(e) => setImportFolderPath(e.target.value)}
-                    className="col-span-3"
+                    className="col-span-3 glass-input"
                     placeholder="C:/Documents/PDFs"
                   />
                 </div>
@@ -163,7 +163,7 @@ const Bookmarks = () => {
                 </p>
               </div>
               <DialogFooter>
-                <Button onClick={handleImportFolder}>Import Folder</Button>
+                <Button onClick={handleImportFolder} className="glass hover:bg-white/20">Import Folder</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -171,16 +171,16 @@ const Bookmarks = () => {
       </div>
 
       {bookmarkFolders.length === 0 ? (
-        <Card>
+        <Card className="glass-card">
           <CardContent className="pt-6 text-center">
             <p className="text-muted-foreground">No bookmarks yet. Create a folder to get started.</p>
           </CardContent>
         </Card>
       ) : (
         <Tabs defaultValue={bookmarkFolders[0]?.id}>
-          <TabsList className="mb-4">
+          <TabsList className="mb-4 glass-dark">
             {bookmarkFolders.map((folder) => (
-              <TabsTrigger key={folder.id} value={folder.id}>
+              <TabsTrigger key={folder.id} value={folder.id} className="data-[state=active]:bg-white/20">
                 {folder.isLocalFolder ? (
                   <FolderInput className="mr-2 h-4 w-4" />
                 ) : (
@@ -192,7 +192,7 @@ const Bookmarks = () => {
           </TabsList>
           {bookmarkFolders.map((folder) => (
             <TabsContent key={folder.id} value={folder.id}>
-              <Card>
+              <Card className="glass-card border-white/10">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between">
                     <div>
@@ -207,11 +207,11 @@ const Bookmarks = () => {
                         if (open) setSelectedFolderId(folder.id);
                       }}>
                         <DialogTrigger asChild>
-                          <Button size="sm" variant="ghost">
+                          <Button size="sm" variant="ghost" className="hover:bg-white/10">
                             <Plus className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="glass-card border-white/10">
                           <DialogHeader>
                             <DialogTitle>Add bookmark</DialogTitle>
                             <DialogDescription>
@@ -227,7 +227,7 @@ const Bookmarks = () => {
                                 id="bookmarkTitle"
                                 value={newBookmarkTitle}
                                 onChange={(e) => setNewBookmarkTitle(e.target.value)}
-                                className="col-span-3"
+                                className="col-span-3 glass-input"
                               />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
@@ -238,7 +238,7 @@ const Bookmarks = () => {
                                 id="bookmarkUrl"
                                 value={newBookmarkUrl}
                                 onChange={(e) => setNewBookmarkUrl(e.target.value)}
-                                className="col-span-3"
+                                className="col-span-3 glass-input"
                               />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
@@ -249,17 +249,17 @@ const Bookmarks = () => {
                                 id="bookmarkFavicon"
                                 value={newBookmarkFavicon}
                                 onChange={(e) => setNewBookmarkFavicon(e.target.value)}
-                                className="col-span-3"
+                                className="col-span-3 glass-input"
                                 placeholder="https://example.com/favicon.ico (optional)"
                               />
                             </div>
                           </div>
                           <DialogFooter>
-                            <Button onClick={handleAddBookmark}>Add Bookmark</Button>
+                            <Button onClick={handleAddBookmark} className="glass hover:bg-white/20">Add Bookmark</Button>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
-                      <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => removeFolder(folder.id)}>
+                      <Button size="sm" variant="ghost" className="text-destructive hover:bg-white/10 hover:text-destructive" onClick={() => removeFolder(folder.id)}>
                         <File className="h-4 w-4" />
                       </Button>
                     </div>
@@ -273,7 +273,7 @@ const Bookmarks = () => {
                       </p>
                     ) : (
                       folder.bookmarks.map((bookmark) => (
-                        <Card key={bookmark.id} className="overflow-hidden">
+                        <Card key={bookmark.id} className="glass-dark border border-white/10 overflow-hidden hover:bg-white/5 transition-all duration-200">
                           <div className="p-4 flex justify-between items-center">
                             <div className="flex items-center">
                               {bookmark.favicon ? (
@@ -282,10 +282,10 @@ const Bookmarks = () => {
                                   alt="" 
                                   className="w-4 h-4 mr-2"
                                   onError={(e) => {
-                                    // Se l'icona non si carica, nascondiamo l'elemento img e mostriamo l'icona predefinita
+                                    // If favicon doesn't load, hide the img element and show the default icon
                                     const target = e.currentTarget;
                                     target.style.display = 'none';
-                                    // Usiamo nextElementSibling per accedere all'elemento successivo (l'icona File)
+                                    // Use nextElementSibling to access the next element (the File icon)
                                     if (target.nextElementSibling instanceof HTMLElement) {
                                       target.nextElementSibling.style.display = 'inline-block';
                                     }
@@ -306,11 +306,11 @@ const Bookmarks = () => {
                             </div>
                             <div className="flex space-x-1">
                               {bookmark.isPdf ? (
-                                <Button size="sm" variant="ghost" onClick={() => viewPdf(bookmark.url)}>
+                                <Button size="sm" variant="ghost" className="hover:bg-white/10" onClick={() => viewPdf(bookmark.url)}>
                                   View
                                 </Button>
                               ) : (
-                                <Button size="sm" variant="ghost" asChild>
+                                <Button size="sm" variant="ghost" className="hover:bg-white/10" asChild>
                                   <a href={bookmark.url} target="_blank" rel="noopener noreferrer">
                                     Open
                                   </a>
@@ -319,7 +319,7 @@ const Bookmarks = () => {
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                className="text-destructive hover:text-destructive"
+                                className="text-destructive hover:bg-white/10 hover:text-destructive"
                                 onClick={() => removeBookmark(bookmark.id)}
                               >
                                 Remove

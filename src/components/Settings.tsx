@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -7,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Upload } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const WALLPAPERS = [
   { id: "default", name: "Default", url: "" },
@@ -21,11 +24,13 @@ const WALLPAPERS = [
 
 const Settings = () => {
   const { settings, updateSettings } = useApp();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [nameInput, setNameInput] = useState(settings.name);
   const [welcomeMessageInput, setWelcomeMessageInput] = useState(settings.welcomeMessage || "");
   const [customWallpaperUrl, setCustomWallpaperUrl] = useState(settings.customWallpaperUrl || "");
   const [showCustomWallpaperInput, setShowCustomWallpaperInput] = useState(!!settings.customWallpaperUrl);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = () => {
     updateSettings({ 
@@ -55,6 +60,32 @@ const Settings = () => {
     }
     const selected = WALLPAPERS.find(w => w.id === settings.selectedWallpaper);
     return selected ? selected.name : "Default";
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setCustomWallpaperUrl(reader.result);
+          setShowCustomWallpaperInput(true);
+          updateSettings({ 
+            selectedWallpaper: "custom",
+            customWallpaperUrl: reader.result
+          });
+          toast({
+            title: "Wallpaper uploaded",
+            description: "Your custom wallpaper has been set successfully."
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -115,7 +146,7 @@ const Settings = () => {
                       <Button
                         key={wallpaper.id}
                         variant={settings.selectedWallpaper === wallpaper.id ? "default" : "ghost"}
-                        className="justify-start"
+                        className="justify-start hover:bg-white/10"
                         onClick={() => handleWallpaperSelect(wallpaper.id)}
                       >
                         {wallpaper.name}
@@ -123,7 +154,7 @@ const Settings = () => {
                     ))}
                     <Button
                       variant={settings.selectedWallpaper === "custom" ? "default" : "ghost"}
-                      className="justify-start"
+                      className="justify-start hover:bg-white/10"
                       onClick={() => handleWallpaperSelect("custom")}
                     >
                       Custom URL
@@ -133,12 +164,33 @@ const Settings = () => {
               </Popover>
               
               {showCustomWallpaperInput && (
-                <Input
-                  className="mt-2 glass-input"
-                  placeholder="Enter wallpaper image URL"
-                  value={customWallpaperUrl}
-                  onChange={(e) => setCustomWallpaperUrl(e.target.value)}
-                />
+                <div className="mt-2 space-y-2">
+                  <Input
+                    className="glass-input"
+                    placeholder="Enter wallpaper image URL"
+                    value={customWallpaperUrl}
+                    onChange={(e) => setCustomWallpaperUrl(e.target.value)}
+                  />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Or upload an image</span>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="glass-dark hover:bg-white/10"
+                      onClick={handleUploadClick}
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload
+                    </Button>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef}
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={handleFileUpload}
+                    />
+                  </div>
+                </div>
               )}
             </div>
           </div>

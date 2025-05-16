@@ -16,10 +16,11 @@ const Index = () => {
     
     if (settings.selectedWallpaper === "custom" && settings.customWallpaperUrl) {
       return {
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${settings.customWallpaperUrl})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url(${settings.customWallpaperUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed"
       };
     }
     
@@ -37,10 +38,11 @@ const Index = () => {
     const url = wallpaperUrls[settings.selectedWallpaper as keyof typeof wallpaperUrls];
     if (url) {
       return {
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${url})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url(${url})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed"
       };
     }
     
@@ -51,7 +53,7 @@ const Index = () => {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-background to-muted p-8"
+      className="min-h-screen bg-gradient-to-br from-background to-muted p-8 bg-fixed"
       style={wallpaperStyle}
     >
       <Settings />
