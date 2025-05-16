@@ -21,7 +21,7 @@ const SearchBar = () => {
         <Input
           type="text"
           placeholder="Search with Google..."
-          className="pr-12 bg-background/80 backdrop-blur-sm border-muted-foreground/20 focus:border-primary"
+          className="pr-12 glass-input border-muted-foreground/20 focus:border-primary"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { Button } from "@/components/ui/button";
@@ -61,11 +60,11 @@ const Settings = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="absolute top-4 right-4">
+        <Button variant="outline" size="sm" className="absolute top-4 right-4 glass-dark hover:bg-white/10">
           Settings
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-h-[85vh] overflow-y-auto glass-card border-white/10">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
@@ -81,7 +80,7 @@ const Settings = () => {
               id="name"
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
-              className="col-span-3"
+              className="col-span-3 glass-input"
             />
           </div>
           
@@ -94,7 +93,7 @@ const Settings = () => {
               value={welcomeMessageInput}
               onChange={(e) => setWelcomeMessageInput(e.target.value)}
               placeholder="Enter a custom welcome message..."
-              className="col-span-3 min-h-[80px]"
+              className="col-span-3 min-h-[80px] glass-input"
             />
           </div>
           
@@ -105,12 +104,12 @@ const Settings = () => {
             <div className="col-span-3">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
+                  <Button variant="outline" className="w-full justify-between glass-input">
                     {getSelectedWallpaperName()}
                     <span className="sr-only">Select wallpaper</span>
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
+                <PopoverContent className="w-[200px] p-0 glass-card">
                   <div className="grid gap-1 p-2">
                     {WALLPAPERS.map((wallpaper) => (
                       <Button
@@ -135,7 +134,7 @@ const Settings = () => {
               
               {showCustomWallpaperInput && (
                 <Input
-                  className="mt-2"
+                  className="mt-2 glass-input"
                   placeholder="Enter wallpaper image URL"
                   value={customWallpaperUrl}
                   onChange={(e) => setCustomWallpaperUrl(e.target.value)}
@@ -203,7 +202,7 @@ const Settings = () => {
           </div>
         </div>
         <div className="flex justify-end">
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button onClick={handleSave} className="glass hover:bg-white/20">Save changes</Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -20,14 +20,14 @@ const PdfViewer = () => {
   if (!currentViewingPdf) return null;
   
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-6xl max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <Card className="w-full max-w-6xl max-h-[90vh] flex flex-col glass-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-base font-medium flex items-center">
             <File className="mr-2 h-4 w-4" />
             {pdfName || "PDF Viewer"}
           </CardTitle>
-          <Button variant="outline" size="sm" onClick={closeCurrentPdf}>
+          <Button variant="outline" size="sm" onClick={closeCurrentPdf} className="glass-dark hover:bg-white/10">
             Close
           </Button>
         </CardHeader>
@@ -47,7 +47,7 @@ const PdfViewer = () => {
                   In a real extension, this would display the local PDF file.
                   For this demo, we're just showing this placeholder.
                 </p>
-                <p className="mt-4 text-xs text-muted-foreground border border-dashed p-2 rounded">
+                <p className="mt-4 text-xs text-muted-foreground border border-dashed p-2 rounded glass-dark">
                   {currentViewingPdf}
                 </p>
               </div>

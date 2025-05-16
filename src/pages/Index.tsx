@@ -16,7 +16,7 @@ const Index = () => {
     
     if (settings.selectedWallpaper === "custom" && settings.customWallpaperUrl) {
       return {
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url(${settings.customWallpaperUrl})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${settings.customWallpaperUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
@@ -37,7 +37,7 @@ const Index = () => {
     const url = wallpaperUrls[settings.selectedWallpaper as keyof typeof wallpaperUrls];
     if (url) {
       return {
-        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url(${url})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${url})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
@@ -57,7 +57,7 @@ const Index = () => {
       <Settings />
       <div className="max-w-5xl mx-auto pt-16">
         {(settings.name || settings.welcomeMessage) && (
-          <div className="text-center mb-4 animate-fade-in">
+          <div className="text-center mb-4 animate-fade-in glass-dark p-3 rounded-lg inline-block mx-auto">
             {settings.welcomeMessage ? (
               <h2 className="text-xl font-medium">{settings.welcomeMessage}</h2>
             ) : settings.name ? (
