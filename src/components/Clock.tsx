@@ -50,7 +50,7 @@ const Clock = () => {
   return (
     <div className="text-center animate-fade-in">
       {settings.showClock && (
-        <h1 className="text-7xl font-light tracking-tighter">{time}</h1>
+        <h1 className="text-7xl font-bold tracking-tight ios-clock-text">{time}</h1>
       )}
       {settings.showDate && (
         <p className="text-lg text-muted-foreground mt-2">{date}</p>

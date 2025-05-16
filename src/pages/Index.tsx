@@ -57,9 +57,9 @@ const Index = () => {
       style={wallpaperStyle}
     >
       <Settings />
-      <div className="max-w-5xl mx-auto pt-16">
+      <div className="max-w-5xl mx-auto pt-16 flex flex-col items-center">
         {(settings.name || settings.welcomeMessage) && (
-          <div className="text-center mb-4 animate-fade-in glass-dark p-3 rounded-lg inline-block mx-auto">
+          <div className="text-center mb-4 animate-fade-in glass-dark p-4 rounded-lg inline-block mx-auto">
             {settings.welcomeMessage ? (
               <h2 className="text-xl font-medium">{settings.welcomeMessage}</h2>
             ) : settings.name ? (
