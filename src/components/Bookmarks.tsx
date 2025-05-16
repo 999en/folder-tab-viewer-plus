@@ -282,9 +282,13 @@ const Bookmarks = () => {
                                   alt="" 
                                   className="w-4 h-4 mr-2"
                                   onError={(e) => {
-                                    // If favicon fails to load, replace with default icon
-                                    e.currentTarget.style.display = 'none';
-                                    e.currentTarget.nextSibling.style.display = 'inline-block';
+                                    // Se l'icona non si carica, nascondiamo l'elemento img e mostriamo l'icona predefinita
+                                    const target = e.currentTarget;
+                                    target.style.display = 'none';
+                                    // Usiamo nextElementSibling per accedere all'elemento successivo (l'icona File)
+                                    if (target.nextElementSibling instanceof HTMLElement) {
+                                      target.nextElementSibling.style.display = 'inline-block';
+                                    }
                                   }}
                                 />
                               ) : null}
